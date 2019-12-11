@@ -1,5 +1,7 @@
 package io.zipcoder;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class MonkeyTypewriter {
     public static void main(String[] args) {
         String introduction = "It was the best of times,\n" +
@@ -24,15 +26,47 @@ public class MonkeyTypewriter {
         // For each Copier(one safe and one unsafe), create and start 5 monkeys copying the introduction to
         // A Tale Of Two Cities.
 
+        UnsafeCopier unsafe = new UnsafeCopier(introduction);
+        SafeCopier safe = new SafeCopier(introduction);
+        Thread monkey1 = new Thread(safe);
+        Thread monkey2 = new Thread(safe);
+        Thread monkey3 = new Thread(safe);
+        Thread monkey4 = new Thread(safe);
+        Thread monkey5 = new Thread(safe);
+
+        monkey1.start();
+        monkey2.start();
+        monkey3.start();
+        monkey4.start();
+        monkey5.start();
+
 
         // This wait is here because main is still a thread and we want the main method to print the finished copies
         // after enough time has passed.
         try {
+            monkey1.join();
+            monkey2.join();
+            monkey3.join();
+            monkey4.join();
+            monkey5.join();
             Thread.sleep(1000);
         } catch(InterruptedException e) {
             System.out.println("MAIN INTERRUPTED");
         }
 
         // Print out the copied versions here.
+        System.out.println(safe.copied);
+
+        if(pageMatcher(safe.copied, introduction)){
+            System.out.println("it matches");
+        } else {
+            System.out.println("it does not match with original");
+        }
     }
+
+    public static boolean pageMatcher(String copy, String orignal){
+        return copy.equals(orignal);
+
+    }
+
 }
